@@ -1,0 +1,16 @@
+# pull official base image
+FROM node:20
+
+# set working directory
+WORKDIR /docker_mongodb
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /docker_mongodb/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install --silent
+RUN npm install react-scripts@5.0.1 -g --silent
+
+EXPOSE 3000

@@ -1,0 +1,57 @@
+# Use root/example as user/password credentials
+version: "3.1"
+
+services:
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - dbdata6:/data/db
+    command: mongod --noauth
+    networks:
+      - mongo_network
+
+  server:
+    image: nodejs
+    volumes:
+      - ./server-mongo:/server-mongo
+      - /server-mongo/node_modules
+    build:
+      context: .
+      dockerfile: ./server-mongo/DockerfileNodejs
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      - MONGO_DATABASE
+      - ADMIN_PASSWORD
+    depends_on:
+      - db
+    command: node server.js
+    networks:
+      - mongo_network
+
+  react:
+    image: react
+    build:
+      context: .
+      dockerfile: ./DockerfileReact
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/docker_mongodb
+      - /docker_mongodb/node_modules
+      - /docker_mongodb/server-mongo
+    depends_on:
+      - server
+    command: npm start
+    networks:
+      - mongo_network
+
+volumes:
+  dbdata6:
+
+networks:
+  mongo_network:
+    driver: bridge

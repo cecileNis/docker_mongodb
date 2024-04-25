@@ -1,6 +1,7 @@
 import { TextField, Snackbar } from "@mui/material";
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 /** Regex */
 /** Firstname's and lastname's regex */
@@ -94,6 +95,12 @@ function App() {
   const [open, setOpen] = useState(false);
   /** Form is submitted  */
   const [isSubmitted, setIsSubmitted] = useState(false);
+  /** List of users */
+  const [users, setUsers] = useState([]);
+
+  const [secret, setSecret] = useState("");
+
+  const url = "http://localhost:8000";
 
   /** User's input data */
   const [userData, setUserData] = useState({
@@ -114,6 +121,23 @@ function App() {
     city: "",
     zipCode: "",
   });
+
+  useEffect(() => {
+    async function countUsers() {
+      try {
+        const api = axios.create({
+          baseURL: url,
+        });
+
+        const response = await api.get(`/users`);
+
+        setUsers(response.data);
+      } catch (error) {
+        console.log("Error : ", error);
+      }
+    }
+    countUsers();
+  }, []);
 
   /**
    * Set userDataErrors `fieldName` error if #value is invalid
@@ -177,8 +201,20 @@ function App() {
   /**
    * Submit and display success snackbar if form is valid
    */
-  const submit = () => {
+  const submit = async () => {
     if (isValid(userDataErrors)) {
+      console.log("UserData : ", userData);
+      try {
+        const api = axios.create({
+          baseURL: url,
+        });
+
+        const response = await api.post(`/user`, userData);
+        console.log(response);
+        // setUsers(...users, response);
+      } catch (e) {
+        console.log("Erreur lors de la création de user : ", e);
+      }
       window.localStorage.setItem("user", JSON.stringify(userData));
       setMessage("Utilisateur enregistré avec succès !");
       setOpen(true);
@@ -213,6 +249,30 @@ function App() {
       city: "",
       zipCode: "",
     });
+  };
+
+  const deleteUser = async (user) => {
+    if (secret.length === 0) {
+      setMessage("Vous devez renseigner le secret password.");
+      setOpen(true);
+      return;
+    }
+    try {
+      const api = axios.create({
+        baseURL: url,
+      });
+      const response = await api.delete(`/user`, {
+        data: {
+          password: secret,
+          userId: user._id,
+        },
+      });
+      setMessage("Utilisateur supprimé avec succès !");
+      setOpen(true);
+    } catch (e) {
+      console.log("Erreur lors de la suppression de user : ", e);
+      setMessage("Secret password incorrect.");
+    }
   };
 
   return (
@@ -335,8 +395,26 @@ function App() {
           />
         </form>
         <div className="list">
-          <div className="users"></div>
-          <button>SECRET KEY</button>
+          <div className="users">
+            <ul>
+              {users.map((user) => (
+                <li>
+                  {user.lastname} {user.firstname} : {user.email}
+                  <button onClick={() => deleteUser(user)}>Supprimer</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <TextField
+            type="password"
+            data-testid="secret"
+            label="Secret password"
+            variant="outlined"
+            value={secret}
+            onChange={(event) => {
+              setSecret(event.target.value);
+            }}
+          />
         </div>
       </div>
     </>

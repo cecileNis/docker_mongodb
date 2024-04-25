@@ -1,6 +1,9 @@
 # Use root/example as user/password credentials
 version: "3.1"
 
+x-common-variables: &common-variables
+  REACT_APP_SERVER_PORT: 8000
+
 services:
   db:
     image: migration_mysql
@@ -15,7 +18,7 @@ services:
     ports:
       - 8080:8080
   server:
-    image: nodejs
+    image: python
     restart: on-failure
     build: .
     ports:
@@ -26,13 +29,22 @@ services:
     depends_on:
       - db
 
-  backend:
-    image: example/database
+  react:
+    image: react
+    build:
+      context: .
+      dockerfile: ./DockerfileReact
+    ports:
+      - 3000:3000
+    environment:
+      <<: *common-variables
     volumes:
-      - db-data:/etc/data
+      - .:/docker_mongodb
+      - /docker_mongodb/node_modules
+      - /docker_mongodb/server-mongo
+    depends_on:
+      - server
+    command: npm start
 
-  backup:
-    image: backup-service
-    volumes: -db-data:/var/lib/backup/data
-
-volumes: db-data
+volumes:
+  db-data:

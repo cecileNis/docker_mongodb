@@ -39,7 +39,6 @@ body {
   row-gap: 50px;
 }
 .users {
-  border: solid 3px rgb(134, 223, 255);
   border-radius: 20px;
   min-height: 60vh;
   width: 100%;
