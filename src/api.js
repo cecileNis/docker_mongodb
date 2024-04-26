@@ -16,7 +16,6 @@ export const createUser = async (userData) => {
     const response = await axios.post(`${API}/user`, userData);
     return response;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
@@ -31,7 +30,6 @@ export const deleteUser = async (id, password) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
