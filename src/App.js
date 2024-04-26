@@ -1,7 +1,7 @@
 import { TextField, Snackbar } from "@mui/material";
 import "./App.css";
+import { getUsers, createUser, deleteUser } from "./api";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 /** Regex */
 /** Firstname's and lastname's regex */
@@ -100,8 +100,6 @@ function App() {
 
   const [secret, setSecret] = useState("");
 
-  const url = "http://localhost:8000";
-
   /** User's input data */
   const [userData, setUserData] = useState({
     firstname: "",
@@ -123,20 +121,15 @@ function App() {
   });
 
   useEffect(() => {
-    async function countUsers() {
+    async function getAPIUsers() {
       try {
-        const api = axios.create({
-          baseURL: url,
-        });
-
-        const response = await api.get(`/users`);
-
-        setUsers(response.data);
+        let users = await getUsers();
+        setUsers(users);
       } catch (error) {
         console.log("Error : ", error);
       }
     }
-    countUsers();
+    getAPIUsers();
   }, []);
 
   /**
@@ -205,11 +198,7 @@ function App() {
     if (isValid(userDataErrors)) {
       console.log("UserData : ", userData);
       try {
-        const api = axios.create({
-          baseURL: url,
-        });
-
-        const response = await api.post(`/user`, userData);
+        const response = await createUser(userData);
         console.log(response);
         // setUsers(...users, response);
       } catch (e) {
@@ -251,22 +240,14 @@ function App() {
     });
   };
 
-  const deleteUser = async (user) => {
+  const onDelete = async (user) => {
     if (secret.length === 0) {
       setMessage("Vous devez renseigner le secret password.");
       setOpen(true);
       return;
     }
     try {
-      const api = axios.create({
-        baseURL: url,
-      });
-      await api.delete(`/user`, {
-        data: {
-          password: secret,
-          userId: user._id,
-        },
-      });
+      await deleteUser(user._id, secret);
       setMessage("Utilisateur supprimé avec succès !");
       setOpen(true);
     } catch (e) {
@@ -400,7 +381,7 @@ function App() {
               {users.map((user) => (
                 <li>
                   {user.lastname} {user.firstname} : {user.email}
-                  <button onClick={() => deleteUser(user)}>Supprimer</button>
+                  <button onClick={() => onDelete(user)}>Supprimer</button>
                 </li>
               ))}
             </ul>
