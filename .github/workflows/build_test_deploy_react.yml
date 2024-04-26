@@ -29,21 +29,17 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm ci, build and test
+      - name: npm i, build and test
         run: |
-          npm ci
+          npm i
           npm run build --if-present
           npm test
-      - name: List project directory contents
-        run: ls -R
-      - name: Print current working directory
-        run: pwd
       - name: Build the stack mongo - nodejs
         run: docker-compose -f docker-compose-mongo.yml up -d
       - name: api test
         working-directory: server-mongo
         run: |
-          npm ci
+          npm i
           npm test
       # - name: Run e2e tests with cypress
       #   uses: cypress-io/github-action@v6
