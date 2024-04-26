@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const API = "http://localhost:8000";
 export const getUsers = async () => {
