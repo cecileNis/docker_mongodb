@@ -261,7 +261,7 @@ function App() {
       const api = axios.create({
         baseURL: url,
       });
-      const response = await api.delete(`/user`, {
+      await api.delete(`/user`, {
         data: {
           password: secret,
           userId: user._id,
