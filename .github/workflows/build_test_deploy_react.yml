@@ -41,8 +41,8 @@ jobs:
       - name: Build the stack mongo - nodejs
         run: docker-compose -f docker-compose-mongo.yml up -d
       - name: api test
+        working-directory: server-mongo
         run: |
-          cd server
           npm ci
           npm test
       # - name: Run e2e tests with cypress
