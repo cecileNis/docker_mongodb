@@ -1,6 +1,6 @@
 import { TextField, Snackbar } from "@mui/material";
 import "./App.css";
-import { getUsers, createUser, deleteUser } from "./api";
+import { getUsers, createUser, deleteUser } from "./api.js";
 import React, { useEffect, useState } from "react";
 
 /** Regex */
