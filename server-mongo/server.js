@@ -40,7 +40,7 @@ app.post("/user", async (req, res) => {
         });
       })
       .catch((error) => {
-        console.log("Error : ", error);
+        console.log("Server error when creating user");
         res.status(500).json({
           error: error,
           success: false,

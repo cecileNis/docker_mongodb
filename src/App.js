@@ -125,9 +125,7 @@ function App() {
       try {
         let users = await getUsers();
         setUsers(users);
-      } catch (error) {
-        console.log("Error : ", error.response);
-      }
+      } catch (error) {}
     }
     getAPIUsers();
   }, []);
@@ -202,7 +200,7 @@ function App() {
         console.log(response);
         // setUsers(...users, response);
       } catch (e) {
-        console.log("Erreur lors de la création de user : ", e);
+        console.log("Erreur lors de la création de user");
       }
       window.localStorage.setItem("user", JSON.stringify(userData));
       setMessage("Utilisateur enregistré avec succès !");
@@ -251,7 +249,7 @@ function App() {
       setMessage("Utilisateur supprimé avec succès !");
       setOpen(true);
     } catch (e) {
-      console.log("Erreur lors de la suppression de user : ", e);
+      console.log("Erreur lors de la suppression de user");
       setMessage("Secret password incorrect.");
     }
   };
