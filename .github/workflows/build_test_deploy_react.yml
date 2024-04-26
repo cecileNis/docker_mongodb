@@ -39,7 +39,7 @@ jobs:
       - name: Print current working directory
         run: pwd
       - name: Build the stack mongo - nodejs
-        run: docker-compose -f ../../../docker-compose-mongo.yml up -d
+        run: docker-compose -f docker-compose-mongo.yml up -d
       - name: api test
         run: |
           cd server
@@ -48,13 +48,13 @@ jobs:
       # - name: Run e2e tests with cypress
       #   uses: cypress-io/github-action@v6
       - name: Stop the stack mongo - nodejs
-        run: docker-compose -f ../../../docker-compose-mongo.yml down
+        run: docker-compose -f docker-compose-mongo.yml down
       - name: Build the stack mysql - py
-        run: docker-compose -f ../../../docker-compose-sql.yml up -d
+        run: docker-compose -f docker-compose-sql.yml up -d
       # - name: Run e2e tests with cypress
       #   uses: cypress-io/github-action@v6
       - name: Stop the stack mysql - py
-        run: docker-compose -f ../../../docker-compose-sql.yml down
+        run: docker-compose -f docker-compose-sql.yml down
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
