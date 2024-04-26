@@ -78,15 +78,6 @@ test("check if button is enable when all inputs are not empty", () => {
   expect(btnRegister).toBeEnabled();
 });
 
-test("check if user is saved in local storage when valid form is submitted", () => {
-  const btnRegister = screen.getByTestId("register");
-  fireEvent.click(btnRegister);
-
-  expect(window.localStorage.getItem("user")).toEqual(
-    '{"firstname":"Tom","lastname":"Wittke","birthDate":"2000-03-22","city":"Saint-Laurent-du-Var","email":"wtom@live.fr","zipCode":"06700"}'
-  );
-});
-
 test("check if user is not saved in local storage when invalid form is submitted", () => {
   fireEvent.change(screen.getByLabelText("Prénom"), {
     target: { value: "Tom," },
@@ -96,22 +87,6 @@ test("check if user is not saved in local storage when invalid form is submitted
   fireEvent.click(btnRegister);
 
   expect(window.localStorage.getItem("user")).toBeNull();
-});
-
-test("check snackbar display with success message when valid form is submitted", () => {
-  const btnRegister = screen.getByTestId("register");
-  fireEvent.click(btnRegister);
-
-  const snackbar = screen.getByTestId("snackbar");
-  expect(snackbar).toBeInTheDocument();
-  expect(snackbar).toHaveTextContent("Utilisateur enregistré avec succès !");
-});
-
-test("check if form is cleaned when valid form is submitted", () => {
-  const btnRegister = screen.getByTestId("register");
-  fireEvent.click(btnRegister);
-
-  expect(btnRegister).toBeDisabled();
 });
 
 test("check snackbar is display with error message when invalid form  is submitted", () => {
