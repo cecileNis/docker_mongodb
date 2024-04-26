@@ -12,8 +12,8 @@ on:
 jobs:
   build_test:
     permissions: # Job-level permissions configuration starts here
-      contents: admin # 'write' access to repository contents
-      pull-requests: admin # 'write' access to pull requests
+      contents: write # 'write' access to repository contents
+      pull-requests: write # 'write' access to pull requests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,10 +36,11 @@ jobs:
           npm test
       - name: Build the stack mongo - nodejs
         run: docker-compose -f docker-compose-mongo.yml up -d
+      # - name: Change directory permissions
+      #   run: chmod 755 server-mongo
       - name: api test
         working-directory: server-mongo
         run: |
-          npm i
           npm test
       # - name: Run e2e tests with cypress
       #   uses: cypress-io/github-action@v6
