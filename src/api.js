@@ -6,7 +6,6 @@ export const getUsers = async () => {
     const response = await axios.get(`${API}/users`);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

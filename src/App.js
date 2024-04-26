@@ -126,7 +126,7 @@ function App() {
         let users = await getUsers();
         setUsers(users);
       } catch (error) {
-        console.log("Error : ", error);
+        console.log("Error : ", error.response);
       }
     }
     getAPIUsers();
