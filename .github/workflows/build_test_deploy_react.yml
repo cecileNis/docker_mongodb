@@ -41,13 +41,13 @@ jobs:
       # run: |
       #   npm test
       - name: Run e2e tests with cypress
-        uses: cypress-io/github-action@v6
+        run: npx cypress run --spec 'cypress/e2e/NodeMongoTest.cy.js'
       - name: Stop the stack mongo - nodejs
         run: docker-compose -f docker-compose-mongo.yml down
       - name: Build the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml up -d
       - name: Run e2e tests with cypress
-        uses: cypress-io/github-action@v6
+        run: npx cypress run --spec 'cypress/e2e/PythonMysqlTest.cy.js'
       - name: Stop the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml down
       - name: Upload coverage reports to Codecov
