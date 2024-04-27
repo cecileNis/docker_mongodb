@@ -13,7 +13,7 @@ describe("API Endpoints", () => {
     };
 
     cy.request("POST", `${baseUrl}/user`, newUser).then((response) => {
-      expect(response.status).to.eq(200);
+      expect(response.status).to.eq(201);
       expect(response.body.message).to.eq("User added successfully");
     });
   });
