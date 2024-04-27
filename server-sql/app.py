@@ -24,8 +24,8 @@ connection = mysql.connector.connect(
 async def add_user(user_data: dict = Body(...)):
     try:
         cursor = connection.cursor()
-        sql = "INSERT INTO User (firstName, lastName, email, birthDate, city, zipCode) VALUES (%s, %s, %s, %s, %s, %s)"
-        cursor.execute(sql, (user_data['firstName'], user_data['lastName'], user_data['email'], user_data['birthDate'], user_data['city'], user_data['zipCode']))
+        sql = "INSERT INTO Users (lastname, firstname, birthDate, zipCode, city, email) VALUES (%s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql, (user_data['lastname'], user_data['firstname'], user_data['birthDate'], user_data['zipCode'], user_data['city'], user_data['email']))
         connection.commit()
         cursor.close()
         return {"message": "User added successfully"}
@@ -48,10 +48,11 @@ async def get_users():
 @app.delete('/user')
 async def delete_user(body: dict = Body(...)):
     try:
+        print(body)
         if body['password'] != 'delete':
             raise HTTPException(status_code=401, detail="Unauthorized")
         cursor = connection.cursor()
-        sql = "DELETE FROM User WHERE id = %s"
+        sql = "DELETE FROM Users WHERE id = %s"
         print("USER ID : %s", body['userId'])
         cursor.execute(sql, (body['userId'],))
         connection.commit()

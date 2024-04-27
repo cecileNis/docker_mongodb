@@ -46,8 +46,8 @@ jobs:
         run: docker-compose -f docker-compose-mongo.yml down
       - name: Build the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml up -d
-      # - name: Run e2e tests with cypress
-      #   uses: cypress-io/github-action@v6
+      - name: Run e2e tests with cypress
+        uses: cypress-io/github-action@v6
       - name: Stop the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml down
       - name: Upload coverage reports to Codecov

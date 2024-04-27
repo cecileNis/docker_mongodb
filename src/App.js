@@ -245,7 +245,11 @@ function App() {
       return;
     }
     try {
-      await deleteUser(user._id, secret);
+      if (user._id) {
+        await deleteUser(user._id, secret);
+      } else {
+        await deleteUser(user.id, secret);
+      }
       setMessage("Utilisateur supprimé avec succès !");
       setOpen(true);
     } catch (e) {
