@@ -34,7 +34,7 @@ app.post("/user", async (req, res) => {
       .save()
       .then((response) => {
         return res.status(201).json({
-          message: "New user created",
+          message: "User added successfully",
           result: response,
           success: true,
         });
@@ -78,7 +78,7 @@ app.delete("/user", async (req, res) => {
           .status(404)
           .json({ message: "Can't find user with id : " + req.body.userId });
       return res.status(200).json({
-        message: "User deleted",
+        message: "User deleted successfully",
       });
     });
   } catch (error) {}
