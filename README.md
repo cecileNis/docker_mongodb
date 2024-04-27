@@ -42,3 +42,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Starting Docker
+
+### Documentation
+
+To start each of the differents scripts which are (Node/MongoDB) and (Python/MySQL)
+
+### `docker-compose -f docker-compose-mongo.yml up -d` to start (Node/MongoDB)
+
+### `docker-compose -f docker-compose-sql.yml up -d` to start (Python/MySQL)
+
+# Starting Test Cypress
+
+### Documentation
+
+Before to start the tests Cypress, you must to start the server Docker
+
+### `npx cypress run`
+
+To open Cypress graphic
+
+### `npx cypress open`
