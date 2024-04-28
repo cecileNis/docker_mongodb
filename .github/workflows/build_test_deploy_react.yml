@@ -51,8 +51,8 @@ jobs:
 
       - name: Build the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml up -d
-      - name: Build the stack mysql - py
-        run: docker-compose -f docker-compose-sql.yml up -d
+      - name: Wait for services to start
+        run: sleep 60
       - name: Build the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml up -d
       - name: Run e2e tests with cypress
