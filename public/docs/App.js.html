@@ -28,7 +28,8 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { TextField, Snackbar } from "@mui/material";
 import "./App.css";
-import React, { useState } from "react";
+import { getUsers, createUser, deleteUser } from "./api.js";
+import React, { useEffect, useState } from "react";
 
 /** Regex */
 /** Firstname's and lastname's regex */
@@ -122,6 +123,10 @@ function App() {
   const [open, setOpen] = useState(false);
   /** Form is submitted  */
   const [isSubmitted, setIsSubmitted] = useState(false);
+  /** List of users */
+  const [users, setUsers] = useState([]);
+
+  const [secret, setSecret] = useState("");
 
   /** User's input data */
   const [userData, setUserData] = useState({
@@ -142,6 +147,16 @@ function App() {
     city: "",
     zipCode: "",
   });
+
+  useEffect(() => {
+    async function getAPIUsers() {
+      try {
+        let users = await getUsers();
+        setUsers(users);
+      } catch (error) {}
+    }
+    getAPIUsers();
+  }, []);
 
   /**
    * Set userDataErrors `fieldName` error if #value is invalid
@@ -205,8 +220,16 @@ function App() {
   /**
    * Submit and display success snackbar if form is valid
    */
-  const submit = () => {
+  const submit = async () => {
     if (isValid(userDataErrors)) {
+      console.log("UserData : ", userData);
+      try {
+        const response = await createUser(userData);
+        console.log(response);
+        // setUsers(...users, response);
+      } catch (e) {
+        console.log("Erreur lors de la création de user");
+      }
       window.localStorage.setItem("user", JSON.stringify(userData));
       setMessage("Utilisateur enregistré avec succès !");
       setOpen(true);
@@ -243,122 +266,168 @@ function App() {
     });
   };
 
+  const onDelete = async (user) => {
+    if (secret.length === 0) {
+      setMessage("Vous devez renseigner le secret password.");
+      setOpen(true);
+      return;
+    }
+    try {
+      if (user._id) {
+        await deleteUser(user._id, secret);
+      } else {
+        await deleteUser(user.id, secret);
+      }
+      setMessage("Utilisateur supprimé avec succès !");
+      setOpen(true);
+    } catch (e) {
+      console.log("Erreur lors de la suppression de user");
+      setMessage("Secret password incorrect.");
+    }
+  };
+
   return (
     &lt;>
-      &lt;form className="form">
-        &lt;TextField
-          className="input"
-          data-testid="firstname"
-          label="Prénom"
-          variant="outlined"
-          value={userData.firstname}
-          onChange={(event) => {
-            setField("firstname", event.target.value);
-          }}
-          error={isSubmitted &amp;&amp; !!userDataErrors.firstname}
-          helperText={
-            isSubmitted &amp;&amp; userDataErrors.firstname
-              ? userDataErrors.firstname
-              : ""
-          }
-        />
-        &lt;TextField
-          className="input"
-          data-testid="lastname"
-          label="Nom"
-          variant="outlined"
-          value={userData.lastname}
-          onChange={(event) => {
-            setField("lastname", event.target.value);
-          }}
-          error={isSubmitted &amp;&amp; !!userDataErrors.lastname}
-          helperText={
-            isSubmitted &amp;&amp; userDataErrors.lastname
-              ? userDataErrors.lastname
-              : ""
-          }
-        />
-        &lt;TextField
-          type="email"
-          className="input"
-          data-testid="email"
-          label="Email"
-          variant="outlined"
-          value={userData.email}
-          onChange={(event) => {
-            setField("email", event.target.value);
-          }}
-          error={isSubmitted &amp;&amp; !!userDataErrors.email}
-          helperText={
-            isSubmitted &amp;&amp; userDataErrors.email ? userDataErrors.email : ""
-          }
-        />
-        &lt;div
-          style={{ display: "flex", flexDirection: "row", columnGap: "20px" }}
-        >
-          &lt;p>Date de naissance :&lt;/p>
+      &lt;div className="main">
+        &lt;form className="form">
           &lt;TextField
-            type="date"
-            label="birth"
             className="input"
-            data-testid="birth"
+            data-testid="firstname"
+            label="Prénom"
             variant="outlined"
-            value={userData.birthDate}
+            value={userData.firstname}
             onChange={(event) => {
-              setField("birthDate", event.target.value);
+              setField("firstname", event.target.value);
             }}
-            error={isSubmitted &amp;&amp; !!userDataErrors.birthDate}
+            error={isSubmitted &amp;&amp; !!userDataErrors.firstname}
             helperText={
-              isSubmitted &amp;&amp; userDataErrors.birthDate
-                ? userDataErrors.birthDate
+              isSubmitted &amp;&amp; userDataErrors.firstname
+                ? userDataErrors.firstname
                 : ""
             }
           />
+          &lt;TextField
+            className="input"
+            data-testid="lastname"
+            label="Nom"
+            variant="outlined"
+            value={userData.lastname}
+            onChange={(event) => {
+              setField("lastname", event.target.value);
+            }}
+            error={isSubmitted &amp;&amp; !!userDataErrors.lastname}
+            helperText={
+              isSubmitted &amp;&amp; userDataErrors.lastname
+                ? userDataErrors.lastname
+                : ""
+            }
+          />
+          &lt;TextField
+            type="email"
+            className="input"
+            data-testid="email"
+            label="Email"
+            variant="outlined"
+            value={userData.email}
+            onChange={(event) => {
+              setField("email", event.target.value);
+            }}
+            error={isSubmitted &amp;&amp; !!userDataErrors.email}
+            helperText={
+              isSubmitted &amp;&amp; userDataErrors.email ? userDataErrors.email : ""
+            }
+          />
+          &lt;div
+            style={{ display: "flex", flexDirection: "row", columnGap: "20px" }}
+          >
+            &lt;p>Date de naissance :&lt;/p>
+            &lt;TextField
+              type="date"
+              label="birth"
+              className="input"
+              data-testid="birth"
+              variant="outlined"
+              value={userData.birthDate}
+              onChange={(event) => {
+                setField("birthDate", event.target.value);
+              }}
+              error={isSubmitted &amp;&amp; !!userDataErrors.birthDate}
+              helperText={
+                isSubmitted &amp;&amp; userDataErrors.birthDate
+                  ? userDataErrors.birthDate
+                  : ""
+              }
+            />
+          &lt;/div>
+          &lt;TextField
+            type="text"
+            data-testid="city"
+            label="Ville"
+            variant="outlined"
+            value={userData.city}
+            onChange={(event) => {
+              setField("city", event.target.value);
+            }}
+          />
+          &lt;TextField
+            type="text"
+            data-testid="zipcode"
+            label="Code postal"
+            variant="outlined"
+            value={userData.zipCode}
+            onChange={(event) => {
+              setField("zipCode", event.target.value);
+            }}
+            error={isSubmitted &amp;&amp; !!userDataErrors.zipCode}
+            helperText={
+              isSubmitted &amp;&amp; userDataErrors.zipCode
+                ? userDataErrors.zipCode
+                : ""
+            }
+          />
+          &lt;button
+            type="button"
+            value="Submit"
+            data-testid="register"
+            className={
+              isCompleted(userData) ? "enable button" : "disabled button"
+            }
+            disabled={!isCompleted(userData)}
+            onClick={submit}
+          >
+            S'enregistrer
+          &lt;/button>
+          &lt;Snackbar
+            data-testid="snackbar"
+            open={open}
+            autoHideDuration={2000}
+            onClose={handleClose}
+            message={message}
+          />
+        &lt;/form>
+        &lt;div className="list">
+          &lt;div className="users">
+            &lt;ul>
+              {users.map((user) => (
+                &lt;li>
+                  {user.lastname} {user.firstname} : {user.email}
+                  &lt;button onClick={() => onDelete(user)}>Supprimer&lt;/button>
+                &lt;/li>
+              ))}
+            &lt;/ul>
+          &lt;/div>
+          &lt;TextField
+            type="password"
+            data-testid="secret"
+            label="Secret password"
+            variant="outlined"
+            value={secret}
+            onChange={(event) => {
+              setSecret(event.target.value);
+            }}
+          />
         &lt;/div>
-        &lt;TextField
-          type="text"
-          data-testid="city"
-          label="Ville"
-          variant="outlined"
-          value={userData.city}
-          onChange={(event) => {
-            setField("city", event.target.value);
-          }}
-        />
-        &lt;TextField
-          type="text"
-          data-testid="zipcode"
-          label="Code postal"
-          variant="outlined"
-          value={userData.zipCode}
-          onChange={(event) => {
-            setField("zipCode", event.target.value);
-          }}
-          error={isSubmitted &amp;&amp; !!userDataErrors.zipCode}
-          helperText={
-            isSubmitted &amp;&amp; userDataErrors.zipCode ? userDataErrors.zipCode : ""
-          }
-        />
-        &lt;button
-          type="button"
-          value="Submit"
-          data-testid="register"
-          className={
-            isCompleted(userData) ? "enable button" : "disabled button"
-          }
-          disabled={!isCompleted(userData)}
-          onClick={submit}
-        >
-          S'enregistrer
-        &lt;/button>
-      &lt;/form>
-      &lt;Snackbar
-        data-testid="snackbar"
-        open={open}
-        autoHideDuration={2000}
-        onClose={handleClose}
-        message={message}
-      />
+      &lt;/div>
     &lt;/>
   );
 }
@@ -389,7 +458,7 @@ export {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 16 2024 15:40:23 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 29 2024 00:09:57 GMT+0200 (heure d’été d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>
