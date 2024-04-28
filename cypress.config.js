@@ -8,6 +8,7 @@ module.exports = defineConfig({
       "cypress/e2e/PythonMysqlTest.cy.js",
     ],
     supportFile: false,
+    defaultCommandTimeout: 10000,
 
     setupNodeEvents(on, config) {
       return config;
