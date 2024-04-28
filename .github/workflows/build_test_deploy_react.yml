@@ -37,8 +37,6 @@ jobs:
 
       - name: Build the stack mongo - nodejs
         run: docker-compose -f docker-compose-mongo.yml up -d
-      - name: Wait for services to start
-        run: sleep 60
       # - name: api test
       #   working-directory: server-mongo
       # run: |
@@ -49,8 +47,10 @@ jobs:
         run: docker-compose -f docker-compose-mongo.yml down
 
       - name: Wait for services to start
-        run: sleep 60
+        run: sleep 10
 
+      - name: Build the stack mysql - py
+        run: docker-compose -f docker-compose-sql.yml up -d
       - name: Build the stack mysql - py
         run: docker-compose -f docker-compose-sql.yml up -d
       - name: Build the stack mysql - py
