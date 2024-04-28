@@ -4,7 +4,7 @@ describe("API Endpoints", () => {
   // Test pour ajouter un utilisateur
   it("should add a new user", () => {
     const newUser = {
-      lastname: "Wittke",
+      lastname: "Witttke",
       firstname: "Tom",
       birthDate: "2000-03-12",
       zipCode: "06700",
