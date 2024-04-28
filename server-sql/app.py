@@ -57,6 +57,6 @@ async def delete_user(body: dict = Body(...)):
         cursor.execute(sql, (body['userId'],))
         connection.commit()
         cursor.close()
-        return "User deleted successfully"
+        return { "message": "User deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

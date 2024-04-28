@@ -64,3 +64,11 @@ Before to start the tests Cypress, you must to start the server Docker
 To open Cypress graphic
 
 ### `npx cypress open`
+
+# Composition du groupe
+
+Cécile Niess, Tom Wittke, Vincent Calatayud
+
+# Répartition des tâches
+
+Pour ce qui est de l'initialisation du projet, on a récupéré le projet de Tom avec (frontend en React, tests unitaire et intégration) mais le reste des tâches (docker, dockerfile, api, tests) ont été fait en commun avec tous le monde.
